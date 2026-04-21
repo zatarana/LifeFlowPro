@@ -1,0 +1,96 @@
+cat << 'EOF' > gradle/libs.versions.toml
+[versions]
+agp="8.2.2"
+kotlin="1.9.22"
+coreKtx="1.12.0"
+lifecycleRuntimeKtx="2.7.0"
+activityCompose="1.8.2"
+composeBom="2024.02.00"
+hilt="2.51.1"
+hiltNavigationCompose="1.2.0"
+room="2.6.1"
+navigationCompose="2.7.7"
+vico="1.13.1"
+glance="1.0.0"
+work="2.9.0"
+ksp="1.9.22-1.0.17"
+
+[libraries]
+androidx-core-ktx={group="androidx.core",name="core-ktx",version.ref="coreKtx"}
+androidx-lifecycle-runtime-ktx={group="androidx.lifecycle",name="lifecycle-runtime-ktx",version.ref="lifecycleRuntimeKtx"}
+androidx-activity-compose={group="androidx.activity",name="activity-compose",version.ref="activityCompose"}
+androidx-compose-bom={group="androidx.compose",name="compose-bom",version.ref="composeBom"}
+androidx-ui={group="androidx.compose.ui",name="ui"}
+androidx-ui-graphics={group="androidx.compose.ui",name="ui-graphics"}
+androidx-ui-tooling={group="androidx.compose.ui",name="ui-tooling"}
+androidx-ui-tooling-preview={group="androidx.compose.ui",name="ui-tooling-preview"}
+androidx-material3={group="androidx.compose.material3",name="material3"}
+androidx-navigation-compose={group="androidx.navigation",name="navigation-compose",version.ref="navigationCompose"}
+hilt-android={group="com.google.dagger",name="hilt-android",version.ref="hilt"}
+hilt-compiler={group="com.google.dagger",name="hilt-android-compiler",version.ref="hilt"}
+hilt-navigation-compose={group="androidx.hilt",name="hilt-navigation-compose",version.ref="hiltNavigationCompose"}
+room-runtime={group="androidx.room",name="room-runtime",version.ref="room"}
+room-ktx={group="androidx.room",name="room-ktx",version.ref="room"}
+room-compiler={group="androidx.room",name="room-compiler",version.ref="room"}
+vico-compose={group="com.patrykandpatrick.vico",name="compose",version.ref="vico"}
+vico-compose-core={group="com.patrykandpatrick.vico",name="compose-core",version.ref="vico"}
+androidx-glance-appwidget={group="androidx.glance",name="glance-appwidget",version.ref="glance"}
+androidx-work-runtime-ktx={group="androidx.work",name="work-runtime-ktx",version.ref="work"}
+
+[plugins]
+android-application={id="com.android.application",version.ref="agp"}
+jetbrains-kotlin-android={id="org.jetbrains.kotlin.android",version.ref="kotlin"}
+hilt-android={id="com.google.dagger.hilt.android",version.ref="hilt"}
+ksp={id="com.google.devtools.ksp",version.ref="ksp"}
+EOF
+
+cat << 'EOF' > build.gradle
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.hilt.android) apply false
+    alias(libs.plugins.ksp) apply false
+}
+EOF
+
+cat << 'EOF' > app/build.gradle
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
+}
+android {
+    namespace="com.lifeflow.pro"
+    compileSdk=34
+    defaultConfig {
+        applicationId="com.lifeflow.pro"
+        minSdk=26
+        targetSdk=34
+        versionCode=1
+        versionName="1.0"
+    }
+    compileOptions { sourceCompatibility=JavaVersion.VERSION_17; targetCompatibility=JavaVersion.VERSION_17 }
+    kotlinOptions { jvmTarget="17" }
+    buildFeatures { compose=true }
+    composeOptions { kotlinCompilerExtensionVersion="1.5.8" }
+}
+dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+    implementation(libs.vico.compose)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.work.runtime.ktx)
+}
+EOF
