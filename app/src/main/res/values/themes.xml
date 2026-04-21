@@ -1,7 +1,5 @@
 <resources>
-    <!-- Tema principal do app -->
     <style name="Theme.LifeFlowPro" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Aqui definimos que o app não tem barra de título no topo -->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
     </style>
