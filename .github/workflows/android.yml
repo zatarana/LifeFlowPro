@@ -19,9 +19,16 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Generate Gradle Wrapper
+        # Este comando cria os arquivos gradlew que estavam faltando
+        run: gradle wrapper
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Build Debug APK
-        # Mudamos de './gradlew' para 'gradle' para ignorar a falta do wrapper
-        run: gradle assembleDebug
+        # Agora usamos o ./gradlew (com ponto e barra), que é o jeito correto
+        run: ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
